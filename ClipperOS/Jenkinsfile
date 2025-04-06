@@ -27,9 +27,9 @@ pipeline {
                             ]
                         ) {
                             sh "printenv"
-                            env.POSTGRESDBLINK = "$[env.POSTGRESDBLINK]"
-                            env.POSTGRESDBUSER = "$[env.POSTGRESDBUSER]"
-                            env.POSTGRESDBPASS = "$[env.POSTGRESDBPASS]"
+                            env.POSTGRESDBLINK = "${env.POSTGRESDBLINK}"
+                            env.POSTGRESDBUSER = "${env.POSTGRESDBUSER}"
+                            env.POSTGRESDBPASS = "${env.POSTGRESDBPASS}"
                             
                         }
                     }
