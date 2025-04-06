@@ -17,8 +17,8 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["ClipperOS/ClipperOS.csproj", "ClipperOS/"]
-RUN dotnet restore "ClipperOS/ClipperOS.csproj"
+COPY ["ClipperOS/ClipperOS/ClipperOS.csproj", "ClipperOS/"]
+RUN dotnet restore "ClipperOS/ClipperOS/ClipperOS.csproj"
 COPY . .
 WORKDIR "/src/ClipperOS"
 RUN dotnet build "ClipperOS.csproj" -c $BUILD_CONFIGURATION -o /app/build
