@@ -37,6 +37,16 @@ pipeline {
                 }
             }
         }
+        
+      stage('Run docker Postgres') {
+          steps {
+              script {
+                  sh 'docker start postgres-db || true'  
+                  sh 'docker start pgadmin || true' 
+              }
+          }
+      }
+
 
         stage('Build Docker Image') {
             steps {
