@@ -8,9 +8,16 @@ namespace ClipperOS.Infrastructure
     {
         private readonly string _connectionString;
         
+        private readonly string host = Environment.GetEnvironmentVariable("POSTGRESDBLINK");
+        private readonly string user = Environment.GetEnvironmentVariable("POSTGRESDBUSER");
+        private readonly string password = Environment.GetEnvironmentVariable("POSTGRESDBPASS");
+        private readonly string database = "ClipperOS"; // Nome do banco de dados
+        
         public DbConnect(string connectionString)
         {
-            _connectionString = connectionString;
+            //_connectionString = connectionString;
+            _connectionString = $"Host={host};Username={user};Password={password};Database={database}";
+            
         }
         
         public NpgsqlConnection GetConnection()
