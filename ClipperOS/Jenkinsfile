@@ -1,6 +1,5 @@
 pipeline {
     agent any // Define o agente que irá executar o pipeline
-
     stages {
         stage('Setup Infisical') {
             steps {
@@ -11,7 +10,7 @@ pipeline {
                                 infisicalCredentialId: 'Infisical',
                                 infisicalEnvironmentSlug: 'prod',
                                 infisicalProjectSlug: 'devops',
-                                infisicalUrl: 'https://app.infisical.com' // Altere para a URL da sua instância do Infisical, se não estiver usando o Infisical Cloud.
+                                infisicalUrl: 'https://app.infisical.com'
                             ],
                             infisicalSecrets: [
                                 infisicalSecret(
@@ -26,15 +25,36 @@ pipeline {
                                 )
                             ]
                         ) {
+                            // Exibe as variáveis de ambiente para depuração
                             sh "printenv"
                             env.POSTGRESDBLINK = "${env.POSTGRESDBLINK}"
                             env.POSTGRESDBUSER = "${env.POSTGRESDBUSER}"
                             env.POSTGRESDBPASS = "${env.POSTGRESDBPASS}"
-                            
                         }
                     }
                 }
             }
         }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Construa a imagem Docker
+                    sh 'docker build -t clipperos:latest .'
+                }
+            }
+        }
+       stage('Start Existing Docker Containers') {
+           steps {
+               script {
+                   // Inicie os contêineres Docker existentes
+                   sh 'docker start mongodb'
+                   sh 'docker start pgadmin'
+                   sh 'docker start postgres-db'
+                   sh 'docker start jenkins'
+                   sh 'docker start infisical'
+               }
+           }
+       }
+
     }
 }
