@@ -16,12 +16,12 @@ namespace ClipperOS.Infrastructure
         public async Task AddProduct(ProductModel product)
         {
             var sql = @"
-                INSERT INTO products (id, name, brand, model, category, price, codebar, stock, created)
+                INSERT INTO products (name, brand, model, category, price, codebar, stock, created)
                 VALUES (@id, @name, @brand, @model, @category, @price, @codebar, @stock, @created)";
 
             var parameters = new[]
             {
-                new NpgsqlParameter("@id", product.Id),
+                //new NpgsqlParameter("@id", product.Id),
                 new NpgsqlParameter("@name", product.Name),
                 new NpgsqlParameter("@brand", product.Brand),
                 new NpgsqlParameter("@model", product.Model),
