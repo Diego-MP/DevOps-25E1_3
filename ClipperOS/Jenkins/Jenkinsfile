@@ -26,8 +26,10 @@ pipeline {
                                 )
                             ]
                         ) {
-                            // Exibe as variáveis de ambiente para depuração
                             sh "printenv"
+                            env.POSTGRESDBLINK = "$[env.POSTGRESDBLINK]"
+                            env.POSTGRESDBUSER = "$[env.POSTGRESDBUSER]"
+                            env.POSTGRESDBPASS = "$[env.POSTGRESDBPASS]"
                         }
                     }
                 }
