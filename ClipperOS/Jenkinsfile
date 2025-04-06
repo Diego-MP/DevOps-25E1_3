@@ -43,5 +43,25 @@ pipeline {
                 }
             }
         }
+
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    // Remove container se já existir
+                    sh 'docker rm -f clipperos_container || true'
+
+                    // Roda o container com as variáveis de ambiente do Infisical
+                    sh """
+                        docker run -d \
+                            -p 8088:8080 \
+                            -e POSTGRESDBLINK=${env.POSTGRESDBLINK} \
+                            -e POSTGRESDBUSER=${env.POSTGRESDBUSER} \
+                            -e POSTGRESDBPASS=${env.POSTGRESDBPASS} \
+                            --name clipperos_container \
+                            clipperos:latest
+                    """
+                }
+            }
+        }
     }
 }
