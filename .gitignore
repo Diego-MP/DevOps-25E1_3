@@ -9,6 +9,9 @@ riderModule.iml
 # Rider specific
 .idea/
 *.sln.iml
+*.http
+*.txt
+*.sql
 
 # User-specific files
 *.suo
