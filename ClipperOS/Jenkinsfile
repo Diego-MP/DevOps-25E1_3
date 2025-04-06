@@ -38,10 +38,8 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                dir('ClipperOS') {
-                    script {
-                        sh 'docker build -t clipperos:latest .'
-                    }
+                script {
+                    sh 'docker build -t clipperos:latest -f ClipperOS/Dockerfile ClipperOS'
                 }
             }
         }
