@@ -1,5 +1,6 @@
 pipeline {
-    agent any // Define o agente que irá executar o pipeline
+    agent any
+
     stages {
         stage('Setup Infisical') {
             steps {
@@ -25,7 +26,6 @@ pipeline {
                                 )
                             ]
                         ) {
-                            // Exibe as variáveis de ambiente para depuração
                             sh "printenv"
                             env.POSTGRESDBLINK = "${env.POSTGRESDBLINK}"
                             env.POSTGRESDBUSER = "${env.POSTGRESDBUSER}"
@@ -35,23 +35,15 @@ pipeline {
                 }
             }
         }
+
         stage('Build Docker Image') {
             steps {
-                script {
-                    // Construa a imagem Docker
-                    sh 'docker build -t clipperos:latest .'
+                dir('ClipperOS') {
+                    script {
+                        sh 'docker build -t clipperos:latest .'
+                    }
                 }
             }
         }
-      stage('Build Docker Image') {
-          steps {
-              dir('ClipperOS') { 
-                  script {
-                      sh 'docker build -t clipperos:latest .'
-                  }
-              }
-          }
-      }
-
     }
 }
