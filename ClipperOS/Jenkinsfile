@@ -47,11 +47,8 @@ pipeline {
            steps {
                script {
                    // Inicie os contêineres Docker existentes
-                   sh 'docker start mongodb'
-                   sh 'docker start pgadmin'
                    sh 'docker start postgres-db'
-                   sh 'docker start jenkins'
-                   sh 'docker start infisical'
+                   sh 'docker start pgadmin'       
                }
            }
        }
