@@ -4,12 +4,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddSingleton<DbConnect>(sp => {
-    var configuration = sp.GetRequiredService<IConfiguration>();
-    var connectionString = configuration.GetConnectionString("DefaultConnection") 
-                           ?? throw new InvalidOperationException("String de conexão 'DefaultConnection' não encontrada.");
-    return new DbConnect(connectionString);
-});
+// builder.Services.AddSingleton<DbConnect>(sp => {
+//     var configuration = sp.GetRequiredService<IConfiguration>();
+//     var connectionString = configuration.GetConnectionString("DefaultConnection") 
+//                            ?? throw new InvalidOperationException("String de conexão 'DefaultConnection' não encontrada.");
+//     return new DbConnect(connectionString);
+// });
 
 var app = builder.Build();
 
