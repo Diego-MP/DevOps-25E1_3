@@ -1,0 +1,37 @@
+pipeline {
+    agent any // Define o agente que irá executar o pipeline
+
+    stages {
+        stage('Setup Infisical') {
+            steps {
+                script {
+                    node {
+                        withInfisical(
+                            configuration: [
+                                infisicalCredentialId: 'Infisical',
+                                infisicalEnvironmentSlug: 'prod',
+                                infisicalProjectSlug: 'devops',
+                                infisicalUrl: 'https://app.infisical.com' // Altere para a URL da sua instância do Infisical, se não estiver usando o Infisical Cloud.
+                            ],
+                            infisicalSecrets: [
+                                infisicalSecret(
+                                    includeImports: true,
+                                    path: '/',
+                                    secretValues: [
+                                        [infisicalKey: 'POSTGRESDBLINK'],
+                                        [infisicalKey: 'POSTGRESDBUSER'],
+                                        [infisicalKey: 'POSTGRESDBPASS'],
+                                        [infisicalKey: 'THIS_KEY_MIGHT_NOT_EXIST', isRequired: false]
+                                    ]
+                                )
+                            ]
+                        ) {
+                            // Exibe as variáveis de ambiente para depuração
+                            sh "printenv"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
