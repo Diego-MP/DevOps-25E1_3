@@ -43,15 +43,15 @@ pipeline {
                 }
             }
         }
-       stage('Start Existing Docker Containers') {
-           steps {
-               script {
-                   // Inicie os contêineres Docker existentes
-                   sh 'docker start postgres-db'
-                   sh 'docker start pgadmin'       
-               }
-           }
-       }
+      stage('Build Docker Image') {
+          steps {
+              dir('ClipperOS') { 
+                  script {
+                      sh 'docker build -t clipperos:latest .'
+                  }
+              }
+          }
+      }
 
     }
 }
