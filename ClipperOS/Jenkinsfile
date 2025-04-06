@@ -29,7 +29,10 @@ pipeline {
                         echo "${env.POSTGRESDBLINK}"
                         echo "${env.POSTGRESDBUSER}"
                         echo "${env.POSTGRESDBPASS}"
-                        
+
+                        env.DB_LINK = env.POSTGRESDBLINK
+                        env.DB_USER = env.POSTGRESDBUSER
+                        env.DB_PASS = env.POSTGRESDBPASS
                     }
                 }
             }
@@ -49,13 +52,13 @@ pipeline {
                     // Remove container existente, se houver
                     sh 'docker rm -f clipperos_container || true'
 
-                    // Inicia novo container com variáveis de ambiente e mapeamento de porta correta
+                    // Usa as variáveis exportadas globalmente
                     sh """
                         docker run -d \
                             -p 8088:8088 \
-                            -e POSTGRESDBLINK="${env.POSTGRESDBLINK}" \
-                            -e POSTGRESDBUSER="${env.POSTGRESDBUSER}" \
-                            -e POSTGRESDBPASS="${env.POSTGRESDBPASS}" \
+                            -e POSTGRESDBLINK="${env.DB_LINK}" \
+                            -e POSTGRESDBUSER="${env.DB_USER}" \
+                            -e POSTGRESDBPASS="${env.DB_PASS}" \
                             --name clipperos_container \
                             clipperos:latest
                     """
