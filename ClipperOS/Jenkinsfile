@@ -5,32 +5,27 @@ pipeline {
         stage('Setup Infisical') {
             steps {
                 script {
-                    node {
-                        withInfisical(
-                            configuration: [
-                                infisicalCredentialId: 'Infisical',
-                                infisicalEnvironmentSlug: 'prod',
-                                infisicalProjectSlug: 'devops',
-                                infisicalUrl: 'https://app.infisical.com'
-                            ],
-                            infisicalSecrets: [
-                                infisicalSecret(
-                                    includeImports: true,
-                                    path: '/',
-                                    secretValues: [
-                                        [infisicalKey: 'POSTGRESDBLINK'],
-                                        [infisicalKey: 'POSTGRESDBUSER'],
-                                        [infisicalKey: 'POSTGRESDBPASS'],
-                                        [infisicalKey: 'THIS_KEY_MIGHT_NOT_EXIST', isRequired: false]
-                                    ]
-                                )
-                            ]
-                        ) {
-                            sh "printenv"
-                            env.POSTGRESDBLINK = "${env.POSTGRESDBLINK}"
-                            env.POSTGRESDBUSER = "${env.POSTGRESDBUSER}"
-                            env.POSTGRESDBPASS = "${env.POSTGRESDBPASS}"
-                        }
+                    withInfisical(
+                        configuration: [
+                            infisicalCredentialId: 'Infisical',
+                            infisicalEnvironmentSlug: 'prod',
+                            infisicalProjectSlug: 'devops',
+                            infisicalUrl: 'https://app.infisical.com'
+                        ],
+                        infisicalSecrets: [
+                            infisicalSecret(
+                                includeImports: true,
+                                path: '/',
+                                secretValues: [
+                                    [infisicalKey: 'POSTGRESDBLINK'],
+                                    [infisicalKey: 'POSTGRESDBUSER'],
+                                    [infisicalKey: 'POSTGRESDBPASS'],
+                                    [infisicalKey: 'THIS_KEY_MIGHT_NOT_EXIST', isRequired: false]
+                                ]
+                            )
+                        ]
+                    ) {
+                        echo "Secrets loaded from Infisical"
                     }
                 }
             }
@@ -47,16 +42,16 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Remove container se já existir
+                    // Remove container existente, se houver
                     sh 'docker rm -f clipperos_container || true'
 
-                    // Roda o container com as variáveis de ambiente do Infisical
+                    // Inicia novo container com variáveis de ambiente e mapeamento de porta correta
                     sh """
                         docker run -d \
-                            -p 8088:8080 \
-                            -e POSTGRESDBLINK=${env.POSTGRESDBLINK} \
-                            -e POSTGRESDBUSER=${env.POSTGRESDBUSER} \
-                            -e POSTGRESDBPASS=${env.POSTGRESDBPASS} \
+                            -p 8088:8088 \
+                            -e POSTGRESDBLINK="${env.POSTGRESDBLINK}" \
+                            -e POSTGRESDBUSER="${env.POSTGRESDBUSER}" \
+                            -e POSTGRESDBPASS="${env.POSTGRESDBPASS}" \
                             --name clipperos_container \
                             clipperos:latest
                     """
