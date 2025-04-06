@@ -26,6 +26,10 @@ pipeline {
                         ]
                     ) {
                         echo "Secrets loaded from Infisical"
+                        echo "${env.POSTGRESDBLINK}"
+                        echo "${env.POSTGRESDBUSER}"
+                        echo "${env.POSTGRESDBPASS}"
+                        
                     }
                 }
             }
