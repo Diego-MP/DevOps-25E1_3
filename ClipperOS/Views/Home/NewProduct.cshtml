@@ -1,0 +1,39 @@
+﻿@model ClipperOS.Models.ProductModel
+@{
+    ViewData["Title"] = "Novo Produto";
+}
+
+<h2>Novo Produto</h2>
+
+<form asp-action="NewProduct" method="post">
+    <div>
+        <label>Nome</label>
+        <input asp-for="Name" />
+    </div>
+    <div>
+        <label>Marca</label>
+        <input asp-for="Brand" />
+    </div>
+    <div>
+        <label>Modelo</label>
+        <input asp-for="Model" />
+    </div>
+    <div>
+        <label>Categoria</label>
+        <input asp-for="Category" />
+    </div>
+    <div>
+        <label>Preço</label>
+        <input asp-for="Price" type="number" step="0.01" />
+    </div>
+    <div>
+        <label>Código de Barras</label>
+        <input asp-for="CodeBar" />
+    </div>
+    <div>
+        <label>Estoque</label>
+        <input asp-for="Stock" type="number" />
+    </div>
+
+    <button type="submit">Salvar</button>
+</form>

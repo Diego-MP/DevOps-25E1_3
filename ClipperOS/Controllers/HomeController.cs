@@ -54,6 +54,38 @@ public class HomeController : Controller
             return View(viewModel);
         }
     }
+    
+    [HttpGet]
+    public IActionResult NewProduct()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> NewProduct(ProductModel model)
+    {
+        if (!ModelState.IsValid) return View(model);
+
+        try
+        {
+            var repo = new ProductRepository(_dbConnect);
+            model.Id = Guid.NewGuid();
+            model.Created = DateTime.Now;
+
+            await repo.AddProduct(model);
+            TempData["Success"] = "Produto adicionado com sucesso!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao adicionar produto");
+            ModelState.AddModelError("", "Erro ao salvar produto.");
+            return View(model);
+        }
+    }
+    
+    
+    
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
