@@ -1,54 +1,44 @@
-﻿@model ClipperOS.Models.HomeIndexViewModel
+﻿@model List<ClipperOS.Models.ProductModel>
+
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "Produtos";
 }
 
-<div class="container mt-4">
-    <div class="row mb-4">
-        <div class="col">
-            <h1>Usuários do Sistema</h1>
-            <p class="text-muted">
-                Total de registros: @Model.TotalUsers |
-                Atualizado em: @Model.LastUpdated.ToString("dd/MM/yyyy HH:mm:ss")
-            </p>
-        </div>
-    </div>
+<h2>Lista de Produtos</h2>
 
-    @if (Model.HasError)
-    {
-        <div class="alert alert-danger">
-            <strong>Erro!</strong> @Model.ErrorMessage
-        </div>
-    }
-    else
-    {
-        if (Model.Users.Any())
+@if (!Model.Any())
+{
+    <p>Nenhum produto cadastrado.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Categoria</th>
+            <th>Preço</th>
+            <th>Código de Barras</th>
+            <th>Estoque</th>
+            <th>Data de Criação</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var product in Model)
         {
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead class="table-dark">
-                    <tr>
-                        <th>Nome</th>
-                        <th>Login</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var user in Model.Users)
-                    {
-                        <tr>
-                            <td>@user.Name</td>
-                            <td>@user.Login</td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
-            </div>
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Brand</td>
+                <td>@product.Model</td>
+                <td>@product.Category</td>
+                <td>@product.Price.ToString("C")</td>
+                <td>@product.CodeBar</td>
+                <td>@product.Stock</td>
+                <td>@product.Created.ToString("dd/MM/yyyy HH:mm")</td>
+            </tr>
         }
-        else
-        {
-            <div class="alert alert-info">
-                Nenhum usuário cadastrado no sistema.
-            </div>
-        }
-    }
-</div>
+        </tbody>
+    </table>
+}

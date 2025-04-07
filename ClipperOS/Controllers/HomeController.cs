@@ -20,81 +20,33 @@ public class HomeController : Controller
     {
         try
         {
-            string sql = "SELECT name, login FROM users ORDER BY name";
-            
-            var users = await _dbConnect.ExecuteReaderAsync<UserModel>(
+            string sql = "SELECT id, name, brand, model, category, price, code_bar, stock, created FROM products ORDER BY created DESC";
+
+            var products = await _dbConnect.ExecuteReaderAsync<ProductModel>(
                 sql,
-                reader => new UserModel
+                reader => new ProductModel
                 {
-                    Name = reader.GetString(0),
-                    Login = reader.GetString(1)
+                    Id = reader.GetGuid(0),
+                    Name = reader.GetString(1),
+                    Brand = reader.GetString(2),
+                    Model = reader.GetString(3),
+                    Category = reader.GetString(4),
+                    Price = reader.GetDecimal(5),
+                    CodeBar = reader.GetString(6),
+                    Stock = reader.GetInt32(7),
+                    Created = reader.GetDateTime(8)
                 }
             );
-            
-            var viewModel = new HomeIndexViewModel
-            {
-                Users = users,
-                TotalUsers = users.Count,
-                LastUpdated = DateTime.Now
-            };
 
-            return View(viewModel);
+            return View(products);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao buscar usuários");
-            
-            var viewModel = new HomeIndexViewModel
-            {
-                Users = new List<UserModel>(),
-                ErrorMessage = "Não foi possível carregar os dados de usuários.",
-                HasError = true
-            };
-            
-            return View(viewModel);
+            _logger.LogError(ex, "Erro ao buscar produtos");
+
+            return View(new List<ProductModel>());
         }
     }
-    
-    [HttpGet]
-    public IActionResult NewProduct()
-    {
-        return View(new ProductModel()); // Passe um modelo vazio
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> NewProduct(ProductModel model)
-    {
-        if (!ModelState.IsValid)
-        {
-            // Log os erros para depuração
-            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-            {
-                Console.WriteLine(error.ErrorMessage);
-            }
-            return View(model); // Retorna a view com os erros de validação
-        }
-
-        Console.WriteLine($"Name: {model.Name}");
-        Console.WriteLine($"Price: {model.Price}");
-        Console.WriteLine($"CodeBar: {model.CodeBar}");
-
-        try
-        {
-            var repo = new ProductRepository(_dbConnect);
-            await repo.AddProduct(model);
-            TempData["Success"] = "Produto adicionado com sucesso!";
-            return RedirectToAction("Index");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao adicionar produto");
-            ModelState.AddModelError("", "Erro ao salvar produto.");
-            return View(model);
-        }
-    }
-    
-    
-    
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
