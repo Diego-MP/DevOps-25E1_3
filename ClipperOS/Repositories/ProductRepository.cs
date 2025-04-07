@@ -16,7 +16,6 @@ namespace ClipperOS.Infrastructure
             _db = db;
         }
 
-        // Adicionar um produto e retornar o produto com Id e Created gerados
         public async Task<ProductModel> AddProduct(ProductModel product)
         {
             var sql = @"
@@ -35,7 +34,6 @@ namespace ClipperOS.Infrastructure
                 new NpgsqlParameter("@stock", product.Stock)
             };
 
-            // Log para depuração (opcional)
             Console.WriteLine(sql);
             foreach (var p in parameters)
             {
@@ -44,7 +42,7 @@ namespace ClipperOS.Infrastructure
 
             var addedProduct = await _db.ExecuteReaderAsync(sql, reader => new ProductModel
             {
-                Id = reader.GetGuid(0), // Alterado de GetString para GetGuid
+                Id = reader.GetGuid(0), 
                 Name = reader.GetString(1),
                 Brand = reader.GetString(2),
                 Model = reader.GetString(3),
@@ -58,7 +56,6 @@ namespace ClipperOS.Infrastructure
             return addedProduct.FirstOrDefault();
         }
 
-        // Listar todos os produtos
         public async Task<List<ProductModel>> GetAllProducts()
         {
             var sql = @"
@@ -67,7 +64,7 @@ namespace ClipperOS.Infrastructure
 
             return await _db.ExecuteReaderAsync(sql, reader => new ProductModel
             {
-                Id = reader.GetGuid(0), // Alterado de GetString para GetGuid
+                Id = reader.GetGuid(0), 
                 Name = reader.GetString(1),
                 Brand = reader.GetString(2),
                 Model = reader.GetString(3),
@@ -79,7 +76,6 @@ namespace ClipperOS.Infrastructure
             });
         }
 
-        // Obter um produto por ID
         public async Task<ProductModel> GetProductById(string id)
         {
             var sql = @"
@@ -89,12 +85,12 @@ namespace ClipperOS.Infrastructure
 
             var parameters = new[]
             {
-                new NpgsqlParameter("@id", Guid.Parse(id)) // Converter string para Guid
+                new NpgsqlParameter("@id", Guid.Parse(id)) 
             };
 
             var products = await _db.ExecuteReaderAsync(sql, reader => new ProductModel
             {
-                Id = reader.GetGuid(0), // Alterado de GetString para GetGuid
+                Id = reader.GetGuid(0),
                 Name = reader.GetString(1),
                 Brand = reader.GetString(2),
                 Model = reader.GetString(3),
@@ -108,7 +104,6 @@ namespace ClipperOS.Infrastructure
             return products.FirstOrDefault();
         }
 
-        // Deletar um produto por ID
         public async Task DeleteProduct(string id)
         {
             var sql = @"
@@ -117,7 +112,7 @@ namespace ClipperOS.Infrastructure
 
             var parameters = new[]
             {
-                new NpgsqlParameter("@id", Guid.Parse(id)) // Converter string para Guid
+                new NpgsqlParameter("@id", Guid.Parse(id)) 
             };
 
             await _db.ExecuteNonQueryAsync(sql, parameters);
