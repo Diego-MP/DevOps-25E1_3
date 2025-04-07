@@ -1,0 +1,52 @@
+﻿version: '3.9'
+
+services:
+  clipperos:
+    image: clipperos
+    build:
+      context: .
+      dockerfile: ClipperOS/Dockerfile
+    ports:
+      - "8088:8088"
+    environment:
+      POSTGRESDBLINK: ${POSTGRESDBLINK}
+      POSTGRESDBUSER: ${POSTGRESDBUSER}
+      POSTGRESDBPASS: ${POSTGRESDBPASS}
+    depends_on:
+      - postgres-db
+    networks:
+      - postgres-network
+
+  postgres-db:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRESDBPASS}
+      POSTGRES_USER: ${POSTGRESDBUSER}
+      POSTGRES_DB: ${POSTGRESDBNAME:-ClipperOS}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - postgres-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-dev@dev.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASS}
+    ports:
+      - "8050:80"
+    depends_on:
+      - postgres-db
+    networks:
+      - postgres-network
+
+volumes:
+  postgres-data:
+
+networks:
+  postgres-network:
+    driver: bridge
