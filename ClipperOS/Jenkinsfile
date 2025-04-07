@@ -66,10 +66,8 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Remove container existente, se houver
                     sh 'docker rm -f clipperos_container || true'
 
-                    // Usa as variáveis exportadas globalmente
                     sh """
                         docker run -d \
                             -p 8088:8088 \
