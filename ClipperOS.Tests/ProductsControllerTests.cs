@@ -16,7 +16,6 @@ namespace ClipperOS.Tests
         [Fact]
         public async Task AddProduct_ReturnsOkResult_WhenProductIsValid()
         {
-            // Arrange
             var mockRepo = new Mock<IProductRepository>();
             var mockLogger = new Mock<ILogger<ProductsController>>();
 
@@ -31,7 +30,6 @@ namespace ClipperOS.Tests
                 Stock = 5
             };
 
-            // Simula o retorno do repositório ao adicionar produto
             mockRepo.Setup(r => r.AddProduct(It.IsAny<ProductModel>()))
                 .ReturnsAsync((ProductModel p) =>
                 {
@@ -42,13 +40,10 @@ namespace ClipperOS.Tests
 
             var controller = new ProductsController(mockRepo.Object, mockLogger.Object);
 
-            // Act
             var result = await controller.AddProduct(productToAdd);
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
 
-            // Serializa e desserializa o objeto para poder acessá-lo com segurança
             var json = JsonSerializer.Serialize(okResult.Value);
             using var doc = JsonDocument.Parse(json);
             var root = doc.RootElement;
@@ -63,7 +58,6 @@ namespace ClipperOS.Tests
         [Fact]
         public async Task GetProducts_ReturnsOkResult_WithListOfProducts()
         {
-            // Arrange
             var mockRepo = new Mock<IProductRepository>();
             var mockLogger = new Mock<ILogger<ProductsController>>();
 
@@ -78,10 +72,8 @@ namespace ClipperOS.Tests
 
             var controller = new ProductsController(mockRepo.Object, mockLogger.Object);
 
-            // Act
             var result = await controller.GetProducts();
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedProducts = Assert.IsAssignableFrom<IEnumerable<ProductModel>>(okResult.Value);
             Assert.Equal(2, returnedProducts.Count());
@@ -90,7 +82,6 @@ namespace ClipperOS.Tests
         [Fact]
         public async Task DeleteProduct_ReturnsOkResult_WhenProductExists()
         {
-            // Arrange
             var mockRepo = new Mock<IProductRepository>();
             var mockLogger = new Mock<ILogger<ProductsController>>();
 
@@ -103,10 +94,8 @@ namespace ClipperOS.Tests
 
             var controller = new ProductsController(mockRepo.Object, mockLogger.Object);
 
-            // Act
             var result = await controller.DeleteProduct(productId);
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var json = JsonSerializer.Serialize(okResult.Value);
             using var doc = JsonDocument.Parse(json);
@@ -118,7 +107,6 @@ namespace ClipperOS.Tests
         [Fact]
         public async Task DeleteProduct_ReturnsNotFound_WhenProductDoesNotExist()
         {
-            // Arrange
             var mockRepo = new Mock<IProductRepository>();
             var mockLogger = new Mock<ILogger<ProductsController>>();
 
@@ -129,10 +117,8 @@ namespace ClipperOS.Tests
 
             var controller = new ProductsController(mockRepo.Object, mockLogger.Object);
 
-            // Act
             var result = await controller.DeleteProduct(productId);
 
-            // Assert
             var notFound = Assert.IsType<NotFoundObjectResult>(result);
             var json = JsonSerializer.Serialize(notFound.Value);
             using var doc = JsonDocument.Parse(json);
@@ -144,7 +130,6 @@ namespace ClipperOS.Tests
         [Fact]
         public async Task DeleteProduct_ReturnsBadRequest_WhenIdIsInvalid()
         {
-            // Arrange
             var mockRepo = new Mock<IProductRepository>();
             var mockLogger = new Mock<ILogger<ProductsController>>();
 
@@ -152,10 +137,8 @@ namespace ClipperOS.Tests
 
             var controller = new ProductsController(mockRepo.Object, mockLogger.Object);
 
-            // Act
             var result = await controller.DeleteProduct(invalidId);
 
-            // Assert
             var badRequest = Assert.IsType<BadRequestObjectResult>(result);
             var json = JsonSerializer.Serialize(badRequest.Value);
             using var doc = JsonDocument.Parse(json);
