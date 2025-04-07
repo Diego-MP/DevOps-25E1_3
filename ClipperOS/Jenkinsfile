@@ -43,7 +43,15 @@ pipeline {
               }
           }
       }
-      
+
+        stage('Run Unit Tests') {
+            steps {
+                script {
+                    sh 'dotnet test ClipperOS.Tests/ClipperOS.Tests.csproj --no-build --verbosity normal'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
