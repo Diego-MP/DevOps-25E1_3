@@ -44,15 +44,6 @@ pipeline {
           }
       }
       
-       stage('Build Docker Image') {
-                  steps {
-                      script {
-                          sh 'docker build -t clipperos:latest -f ClipperOS/Dockerfile ClipperOS'
-                      }
-                  }
-              }
-
-
         stage('Build Docker Image') {
             steps {
                 script {
