@@ -1,12 +1,10 @@
 using ClipperOS.Infrastructure;
-using ClipperOS.Repositories; // <-- Adicione isso
+using ClipperOS.Repositories; 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adiciona MVC
 builder.Services.AddControllersWithViews();
 
-// Registra DbConnect
 builder.Services.AddSingleton<DbConnect>(sp => {
     var configuration = sp.GetRequiredService<IConfiguration>();
     var connectionString = configuration.GetConnectionString("DefaultConnection") 
@@ -14,7 +12,6 @@ builder.Services.AddSingleton<DbConnect>(sp => {
     return new DbConnect(connectionString);
 });
 
-// ✅ Registra a interface e sua implementação
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
@@ -28,11 +25,11 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();
-app.MapStaticAssets(); // Mantido seu método personalizado
+app.MapStaticAssets(); 
 
 app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets(); // Mantido seu método de extensão personalizado
+    .WithStaticAssets(); 
 
 app.Run();
