@@ -34,16 +34,32 @@ pipeline {
                 }
             }
         }
-        
-      stage('Run docker Postgres') {
-          steps {
-              script {
-                  sh 'docker start postgres-db || true'  
-                  sh 'docker start pgadmin || true' 
-              }
-          }
-      }
 
+        stage('Run docker Postgres') {
+            steps {
+                script {
+                    sh 'docker start postgres-db || true'  
+                    sh 'docker start pgadmin || true' 
+                }
+            }
+        }
+
+        stage('Restore & Build') {
+            steps {
+                script {
+                    sh 'dotnet restore'
+                    sh 'dotnet build --no-restore'
+                }
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                script {
+                    sh 'dotnet test ClipperOS.Tests/ClipperOS.Tests.csproj --no-build --verbosity normal'
+                }
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
@@ -56,10 +72,8 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Remove container existente, se houver
                     sh 'docker rm -f clipperos_container || true'
 
-                    // Usa as variáveis exportadas globalmente
                     sh """
                         docker run -d \
                             -p 8088:8088 \
