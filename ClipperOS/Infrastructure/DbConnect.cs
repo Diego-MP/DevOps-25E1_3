@@ -12,8 +12,6 @@ namespace ClipperOS.Infrastructure
         private readonly string user = Environment.GetEnvironmentVariable("POSTGRESDBUSER");
         private readonly string password = Environment.GetEnvironmentVariable("POSTGRESDBPASS");
         private readonly string database = "ClipperOS"; // Nome do banco de dados
-
-
         
         public DbConnect(string connectionString)
         {
