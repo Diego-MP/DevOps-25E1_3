@@ -8,9 +8,14 @@ namespace ClipperOS.Infrastructure
     {
         private readonly string _connectionString;
         
-        private readonly string host = Environment.GetEnvironmentVariable("POSTGRESDBLINK");
-        private readonly string user = Environment.GetEnvironmentVariable("POSTGRESDBUSER");
-        private readonly string password = Environment.GetEnvironmentVariable("POSTGRESDBPASS");
+        // private readonly string host = Environment.GetEnvironmentVariable("POSTGRESDBLINK");
+        // private readonly string user = Environment.GetEnvironmentVariable("POSTGRESDBUSER");
+        // private readonly string password = Environment.GetEnvironmentVariable("POSTGRESDBPASS");
+        // private readonly string database = "ClipperOS"; // Nome do banco de dados
+
+        private readonly string host = "198.211.100.23:5432";
+        private readonly string user = "postgres";
+        private readonly string password = "Postgres@Docker";
         private readonly string database = "ClipperOS"; // Nome do banco de dados
         
         public DbConnect(string connectionString)

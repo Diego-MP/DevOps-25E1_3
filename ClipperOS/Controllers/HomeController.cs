@@ -58,20 +58,29 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult NewProduct()
     {
-        return View();
+        return View(new ProductModel()); // Passe um modelo vazio
     }
 
     [HttpPost]
     public async Task<IActionResult> NewProduct(ProductModel model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid)
+        {
+            // Log os erros para depuração
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine(error.ErrorMessage);
+            }
+            return View(model); // Retorna a view com os erros de validação
+        }
+
+        Console.WriteLine($"Name: {model.Name}");
+        Console.WriteLine($"Price: {model.Price}");
+        Console.WriteLine($"CodeBar: {model.CodeBar}");
 
         try
         {
             var repo = new ProductRepository(_dbConnect);
-            model.Id = Guid.NewGuid();
-            model.Created = DateTime.Now;
-
             await repo.AddProduct(model);
             TempData["Success"] = "Produto adicionado com sucesso!";
             return RedirectToAction("Index");

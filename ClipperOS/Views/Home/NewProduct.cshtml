@@ -1,39 +1,45 @@
 ﻿@model ClipperOS.Models.ProductModel
-@{
-    ViewData["Title"] = "Novo Produto";
-}
-
-<h2>Novo Produto</h2>
 
 <form asp-action="NewProduct" method="post">
     <div>
-        <label>Nome</label>
-        <input asp-for="Name" />
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <div>
-        <label>Marca</label>
-        <input asp-for="Brand" />
+        <label asp-for="Brand"></label>
+        <input asp-for="Brand" class="form-control" />
+        <span asp-validation-for="Brand" class="text-danger"></span>
     </div>
     <div>
-        <label>Modelo</label>
-        <input asp-for="Model" />
+        <label asp-for="Model"></label>
+        <input asp-for="Model" class="form-control" />
+        <span asp-validation-for="Model" class="text-danger"></span>
     </div>
     <div>
-        <label>Categoria</label>
-        <input asp-for="Category" />
+        <label asp-for="Category"></label>
+        <input asp-for="Category" class="form-control" />
+        <span asp-validation-for="Category" class="text-danger"></span>
     </div>
     <div>
-        <label>Preço</label>
-        <input asp-for="Price" type="number" step="0.01" />
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
     </div>
     <div>
-        <label>Código de Barras</label>
-        <input asp-for="CodeBar" />
+        <label asp-for="CodeBar"></label>
+        <input asp-for="CodeBar" class="form-control" />
+        <span asp-validation-for="CodeBar" class="text-danger"></span>
     </div>
     <div>
-        <label>Estoque</label>
-        <input asp-for="Stock" type="number" />
+        <label asp-for="Stock"></label>
+        <input asp-for="Stock" class="form-control" />
+        <span asp-validation-for="Stock" class="text-danger"></span>
     </div>
 
-    <button type="submit">Salvar</button>
+    <button type="submit" class="btn btn-primary">Salvar</button>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
