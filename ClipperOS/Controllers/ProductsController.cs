@@ -1,48 +1,38 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ClipperOS.Models;
-using ClipperOS.Infrastructure;
+using ClipperOS.Repositories;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace ClipperOS.Controllers
 {
-    [Route("api/[controller]")] // Rota base: /api/products
+    [Route("api/[controller]")]
+    [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly DbConnect _dbConnect;
+        private readonly IProductRepository _repository;
         private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(DbConnect dbConnect, ILogger<ProductsController> logger)
+        public ProductsController(IProductRepository repository, ILogger<ProductsController> logger)
         {
-            _dbConnect = dbConnect;
+            _repository = repository;
             _logger = logger;
         }
 
-        // POST: /api/products - Adicionar um produto
         [HttpPost]
         [Consumes("application/json")]
         public async Task<IActionResult> AddProduct([FromBody] ProductModel model)
         {
-            // Remover validação de Id e Created, pois são gerados pelo banco
-            if (ModelState.ContainsKey("Id"))
-            {
-                ModelState.Remove("Id");
-            }
-            if (ModelState.ContainsKey("Created"))
-            {
-                ModelState.Remove("Created");
-            }
+            if (ModelState.ContainsKey("Id")) ModelState.Remove("Id");
+            if (ModelState.ContainsKey("Created")) ModelState.Remove("Created");
 
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             try
             {
-                var repo = new ProductRepository(_dbConnect);
-                var addedProduct = await repo.AddProduct(model);
+                var addedProduct = await _repository.AddProduct(model);
                 return Ok(new { Message = "Produto adicionado com sucesso!", Product = addedProduct });
             }
             catch (Exception ex)
@@ -52,14 +42,12 @@ namespace ClipperOS.Controllers
             }
         }
 
-        // GET: /api/products - Listar todos os produtos
         [HttpGet]
         public async Task<IActionResult> GetProducts()
         {
             try
             {
-                var repo = new ProductRepository(_dbConnect);
-                var products = await repo.GetAllProducts();
+                var products = await _repository.GetAllProducts();
                 return Ok(products);
             }
             catch (Exception ex)
@@ -69,7 +57,6 @@ namespace ClipperOS.Controllers
             }
         }
 
-        // DELETE: /api/products/{id} - Deletar um produto por ID
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(string id)
         {
@@ -80,14 +67,13 @@ namespace ClipperOS.Controllers
                     return BadRequest(new { Message = "ID inválido. Deve ser um UUID válido." });
                 }
 
-                var repo = new ProductRepository(_dbConnect);
-                var productExists = await repo.GetProductById(id);
-                if (productExists == null)
+                var product = await _repository.GetProductById(id);
+                if (product == null)
                 {
                     return NotFound(new { Message = $"Produto com ID {id} não encontrado." });
                 }
 
-                await repo.DeleteProduct(id);
+                await _repository.DeleteProduct(id);
                 return Ok(new { Message = $"Produto com ID {id} deletado com sucesso!" });
             }
             catch (Exception ex)

@@ -1,8 +1,14 @@
-﻿namespace ClipperOS.Repositories;
+﻿using ClipperOS.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-public interface IProduct
+namespace ClipperOS.Repositories
 {
-    public void AddProduct();
-    public void RemoveProduct();
-    public void AlterProduct();
+    public interface IProductRepository
+    {
+        Task<ProductModel> AddProduct(ProductModel product);
+        Task<List<ProductModel>> GetAllProducts();
+        Task<ProductModel> GetProductById(string id);
+        Task DeleteProduct(string id);
+    }
 }

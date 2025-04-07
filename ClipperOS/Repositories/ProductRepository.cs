@@ -3,10 +3,11 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ClipperOS.Repositories;
 
-namespace ClipperOS.Infrastructure
+namespace ClipperOS.Infrastructure 
 {
-    public class ProductRepository
+    public class ProductRepository : IProductRepository
     {
         private readonly DbConnect _db;
 
